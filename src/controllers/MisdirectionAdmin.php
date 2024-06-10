@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 
 /**
  *	@author Nathan Glasl <nathan@symbiote.com.au>
@@ -52,7 +53,11 @@ class MisdirectionAdmin extends ModelAdmin
 	 */
 	public function getMappingChain()
 	{
-		$user = Member::currentUserID();
+		$member = Security::getCurrentUser();
+		if ($member) {
+			$user = $member->ID;
+		}
+		$user = 0;
 
 		if (singleton(LinkMapping::class)->canCreate()) {
 

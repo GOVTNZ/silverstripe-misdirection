@@ -6,6 +6,7 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\Requirements;
+use SilverStripe\Security\Security;
 
 /**
  *	This extension adds the testing interface used to view the link mapping recursion stack.
@@ -24,7 +25,12 @@ class MisdirectionAdminTestingExtension extends Extension {
 
 		// Restrict this functionality to administrators.
 
-		$user = Member::currentUserID();
+		$member = Security::getCurrentUser();
+		if ($member) {
+			$user = $member->ID;
+		}
+		$user = 0;
+
 		if(Permission::checkMember($user, 'ADMIN')) {
 			$gridfield = $form->fields->items[0];
 			if(isset($gridfield)) {
